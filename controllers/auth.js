@@ -1,9 +1,12 @@
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { userSchema } = require("../validation/userValidationSchema");
+const {
+  registrShema,
+  loginSchema,
+} = require("../validation/userValidationSchema");
 
-async function register(req, res, next) {
+async function signup(req, res, next) {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -11,7 +14,7 @@ async function register(req, res, next) {
       return res.status(409).json({ message: "Email in use" });
     }
 
-    const { error } = userSchema.validate(req.body);
+    const { error } = registrShema.validate(req.body);
     if (error) {
       return res.status(400).json({ message: error.message });
     }
@@ -29,10 +32,10 @@ async function register(req, res, next) {
   }
 }
 
-async function login(req, res, next) {
+async function signin(req, res, next) {
   const { email, password } = req.body;
   try {
-    const { error } = userSchema.validate(req.body);
+    const { error } = loginSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ message: error.message });
     }
@@ -61,7 +64,7 @@ async function login(req, res, next) {
   }
 }
 
-async function logout(req, res, next) {
+async function sigout(req, res, next) {
   try {
     const user = await User.findByIdAndUpdate(req.user.id, {
       token: null,
@@ -75,18 +78,4 @@ async function logout(req, res, next) {
   }
 }
 
-async function current(req, res, next) {
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(401).json({ message: "Not authorized" });
-    }
-    return res.status(200).json({
-      email: user.email,
-      subscription: user.subscription,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-module.exports = { register, login, logout, current };
+module.exports = { signup, signin, sigout };

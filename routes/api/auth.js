@@ -1,12 +1,12 @@
 const express = require("express");
-const { register, login, logout, current } = require("../../controllers/auth");
+const { signup, signin, sigout } = require("../../controllers/auth");
 const router = express.Router();
 const jsonParser = express.json();
 const auth = require("../../middleware/midauth");
 
-router.post("/register", jsonParser, register);
-router.post("/login", jsonParser, login);
-router.post("/logout", auth, logout);
-router.get("/current", auth, current);
+router.post("/signup", jsonParser, signup);
+router.post("/signin", jsonParser, signin);
+router.post("/sigout", auth, sigout);
+router.post("/forgot-password");
 
 module.exports = router;
