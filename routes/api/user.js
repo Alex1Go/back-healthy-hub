@@ -2,6 +2,7 @@ const express = require("express");
 const {
   current,
   update,
+  addWater,
   // getAllStatistics,
 } = require("../../controllers/userControllers");
 const auth = require("../../middleware/midauth");
@@ -15,15 +16,8 @@ router.post("/weight");
 router.post("/food-intake");
 router.put("/food-intake/:id");
 router.delete("/food-intake/");
-router.post("/water-intake");
+router.post("/water-intake", addWater);
 router.delete("/water-intake");
 // router.get("/statistics", getAllStatistics);
-
-// router.get("/", auth, getAllContacts);
-// router.get("/:contactId", auth, getOneContact);
-// router.post("/", jsonParser, auth, newOneContact);
-// router.delete("/:contactId", deleteContact);
-// router.put("/:contactId", jsonParser, updateContact);
-// router.patch("/:contactId/favorite", jsonParser, updateStatusContact);
 
 module.exports = router;

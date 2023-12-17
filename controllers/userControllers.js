@@ -83,40 +83,29 @@ async function update(req, res, next) {
     next(error);
   }
 }
-// async function addWater(req, res, next) {
-//   try {
-//     const currentData = new Date();
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+async function addWater(req, res, next) {
+  const { date, woter } = req.body;
+  const { _id: owner } = req.user;
+  try {
+    const userCard = await UserCard.findOne({ owner });
+    const existingEntryIndex = userCard.waterStatistics.findIndex(
+      (entry) => entry.date === date
+    );
 
-// Card.methods.logWaterConsumption = async function (date, waterAmount) {
-//   try {
-//     // Поиск текущего пользователя в базе данных
-//     const userCard = await Card.findOne({ _id: this._id });
-
-//     // Проверка, существует ли запись для текущей даты в waterStatistics
-//     const existingEntryIndex = userCard.waterStatistics.findIndex(
-//       (entry) => entry.date === date
-//     );
-
-//     // Если запись существует, обновите количество выпитой воды
-//     if (existingEntryIndex !== -1) {
-//       userCard.waterStatistics[existingEntryIndex].water = waterAmount;
-//     } else {
-//       // Если записи нет, добавьте новую запись
-//       userCard.waterStatistics.push({ date, water: waterAmount });
-//     }
-
-//     // Сохранение изменений
-//     await userCard.save();
-//     return userCard;
-//   } catch (error) {
-//     console.error("Error logging water consumption:", error);
-//     throw error;
-//   }
-// };
+    if (existingEntryIndex !== -1) {
+      userCard.waterStatistics[existingEntryIndex].woter = woter;
+    } else {
+      userCard.waterStatistics.push({
+        date: date,
+        woter: woter,
+      });
+    }
+    await userCard.save();
+    res.status(200).json({ success: true, date: userCard });
+  } catch (error) {
+    next(error);
+  }
+}
 
 // async function getAllStatistics(req, res, next) {
 //   try {
@@ -124,4 +113,4 @@ async function update(req, res, next) {
 //     next(error);
 //   }
 // }
-module.exports = { current, update };
+module.exports = { current, update, addWater };
