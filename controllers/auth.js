@@ -2,29 +2,56 @@ const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
-  registrShema,
+  registrSchema,
   loginSchema,
 } = require("../validation/userValidationSchema");
 
 async function signup(req, res, next) {
-  const { email, password } = req.body;
+  const {
+    username,
+    email,
+    password,
+    goal,
+    gender,
+    age,
+    height,
+    weight,
+    activity,
+  } = req.body;
   try {
     const user = await User.findOne({ email });
     if (user) {
       return res.status(409).json({ message: "Email in use" });
     }
 
-    const { error } = registrShema.validate(req.body);
+    const { error } = registrSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ message: error.message });
     }
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const newUser = await User.create({ email, password: passwordHash });
+    const newUser = await User.create({
+      username,
+      email,
+      password: passwordHash,
+      goal,
+      gender,
+      age,
+      height,
+      weight,
+      activity,
+    });
+
     res.status(201).json({
       user: {
+        username: newUser.name,
         email: newUser.email,
-        subscription: newUser.subscription,
+        goal: newUser.goal,
+        gender: newUser.gender,
+        age: newUser.age,
+        height: newUser.height,
+        weight: newUser.weight,
+        activity: newUser.activity,
       },
     });
   } catch (error) {
@@ -56,7 +83,6 @@ async function signin(req, res, next) {
       token,
       user: {
         email: user.email,
-        subscription: user.subscription,
       },
     });
   } catch (error) {
