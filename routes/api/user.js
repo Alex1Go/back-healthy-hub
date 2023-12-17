@@ -1,5 +1,8 @@
 const express = require("express");
-const { current } = require("../../controllers/userControllers");
+const {
+  current,
+  getAllStatistics,
+} = require("../../controllers/userControllers");
 const auth = require("../../middleware/midauth");
 
 const router = express.Router();
@@ -13,8 +16,7 @@ router.put("/food-intake/:id");
 router.delete("/food-intake/");
 router.post("/water-intake");
 router.delete("/water-intake");
-router.get("/statistics");
-router.get("/recommended-food");
+router.get("/statistics", getAllStatistics);
 
 // router.get("/", auth, getAllContacts);
 // router.get("/:contactId", auth, getOneContact);

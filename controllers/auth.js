@@ -132,7 +132,6 @@ async function signin(req, res, next) {
       token,
       user: {
         email: user.email,
-        subscription: user.subscription,
       },
     });
   } catch (error) {
