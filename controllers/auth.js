@@ -44,7 +44,7 @@ async function signup(req, res, next) {
       activity,
     });
 
-    const newUserCard = await UserCard.create({
+    await UserCard.create({
       bmr: bmrCalc(weight, height, age, gender, activity),
 
       waterRate: waterCalc(weight, activity),
