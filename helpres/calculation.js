@@ -42,25 +42,25 @@ function ratioCalc(goal, weight, height, age, gender, activity) {
   switch (goal) {
     case "Lose Fat":
       ratio = {
-        protein: (bmr / 100) * 25,
-        fat: (bmr / 100) * 20,
-        carbonohidrates: (bmr / 100) * 55,
+        protein: Math.round((bmr / 100) * 25),
+        fat: Math.round((bmr / 100) * 20),
+        carbonohidrates: Math.round((bmr / 100) * 55),
       };
       return ratio;
 
     case "Maintain":
       ratio = {
-        protein: (bmr / 100) * 30,
-        fat: (bmr / 100) * 20,
-        carbonohidrates: (bmr / 100) * 50,
+        protein: Math.round((bmr / 100) * 30),
+        fat: Math.round((bmr / 100) * 20),
+        carbonohidrates: Math.round((bmr / 100) * 50),
       };
       return ratio;
 
     case "Gain Muscle":
       ratio = {
-        protein: (bmr / 100) * 20,
-        fat: (bmr / 100) * 25,
-        carbonohidrates: (bmr / 100) * 55,
+        protein: Math.round((bmr / 100) * 20),
+        fat: Math.round((bmr / 100) * 25),
+        carbonohidrates: Math.round((bmr / 100) * 55),
       };
       return ratio;
   }
