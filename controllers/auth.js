@@ -1,6 +1,8 @@
 const User = require("../models/users");
+const UserCard = require("../models/userCard");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { bmrCalc, waterCalc, ratioCalc } = require("../helpres/calculation");
 const {
   registrSchema,
   loginSchema,
@@ -40,6 +42,53 @@ async function signup(req, res, next) {
       height,
       weight,
       activity,
+    });
+
+    const newUserCard = await UserCard.create({
+      bmr: bmrCalc(weight, height, age, gender, activity),
+
+      waterRate: waterCalc(weight, activity),
+
+      ratio: ratioCalc(goal, weight, height, age, gender, activity),
+
+      weightStatistics: [],
+
+      waterStatistics: [],
+
+      foodConsumed: [],
+
+      breakfast: {
+        name: "",
+        carbonohidrates: 0,
+        protein: 0,
+        fat: 0,
+        calories: 0,
+      },
+
+      lunch: {
+        name: "",
+        carbonohidrates: 0,
+        protein: 0,
+        fat: 0,
+        calories: 0,
+      },
+
+      dinner: {
+        name: "",
+        carbonohidrates: 0,
+        protein: 0,
+        fat: 0,
+        calories: 0,
+      },
+
+      snack: {
+        name: "",
+        carbonohidrates: 0,
+        protein: 0,
+        fat: 0,
+        calories: 0,
+      },
+      owner: newUser._id,
     });
 
     res.status(201).json({

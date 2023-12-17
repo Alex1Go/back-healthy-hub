@@ -6,7 +6,10 @@ const userCardSchema = new mongoose.Schema({
   bmr: { type: Number },
   // базовий денний обсяг калорій
 
-  waterRate: { type: Number },
+  waterRate: {
+    type: Number,
+    required: true,
+  },
   // денна норма води
 
   ratio: {
@@ -56,92 +59,92 @@ const userCardSchema = new mongoose.Schema({
   breakfast: {
     name: {
       type: String,
-      required: true,
+      // required: true,
     },
     carbonohidrates: {
       type: Number,
-      required: true,
+      // required: true,
     },
     protein: {
       type: Number,
-      required: true,
+      // required: true,
     },
     fat: {
       type: Number,
-      required: true,
+      // required: true,
     },
     calories: {
       type: Number,
-      required: true,
+      // required: true,
     },
   },
 
   lunch: {
     name: {
       type: String,
-      required: true,
+      // required: true,
     },
     carbonohidrates: {
       type: Number,
-      required: true,
+      // required: true,
     },
     protein: {
       type: Number,
-      required: true,
+      // required: true,
     },
     fat: {
       type: Number,
-      required: true,
+      // required: true,
     },
     calories: {
       type: Number,
-      required: true,
+      // required: true,
     },
   },
 
   dinner: {
     name: {
       type: String,
-      required: true,
+      // required: true,
     },
     carbonohidrates: {
       type: Number,
-      required: true,
+      // required: true,
     },
     protein: {
       type: Number,
-      required: true,
+      // required: true,
     },
     fat: {
       type: Number,
-      required: true,
+      // required: true,
     },
     calories: {
       type: Number,
-      required: true,
+      // required: true,
     },
   },
 
   snack: {
     name: {
       type: String,
-      required: true,
+      // required: true,
     },
     carbonohidrates: {
       type: Number,
-      required: true,
+      // required: true,
     },
     protein: {
       type: Number,
-      required: true,
+      // required: true,
     },
     fat: {
       type: Number,
-      required: true,
+      // required: true,
     },
     calories: {
       type: Number,
-      required: true,
+      // required: true,
     },
   },
 
