@@ -124,7 +124,7 @@ async function signin(req, res, next) {
       return res.status(401).json({ message: "Email or password is wrong" });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "4h",
+      expiresIn: "72h",
     });
     await User.findByIdAndUpdate(user._id, { token }).exec();
 
