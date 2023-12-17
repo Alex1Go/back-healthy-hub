@@ -1,4 +1,7 @@
 const User = require("../models/users");
+const UserCard = require("../models/userCard");
+const { updateSchema } = require("../validation/userValidationSchema");
+const { bmrCalc, waterCalc, ratioCalc } = require("../helpres/calculation");
 // const Card = require("../models/userCard");
 
 async function current(req, res, next) {
@@ -7,9 +10,74 @@ async function current(req, res, next) {
     if (!user) {
       return res.status(401).json({ message: "Not authorized" });
     }
+
+    const userCard = await UserCard.findOne({ owner: user.id });
+
     return res.status(200).json({
+      username: user.name,
       email: user.email,
-      subscription: user.subscription,
+      goal: user.goal,
+      gender: user.gender,
+      age: user.age,
+      height: user.height,
+      weight: user.weight,
+      activity: user.activity,
+      bmr: userCard.bmr,
+      waterRate: userCard.waterRate,
+      ratio: userCard.ratio,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function update(req, res, next) {
+  const { goal, gender, age, height, weight, activity } = req.body;
+  const { _id } = req.user;
+
+  //
+  // записати вагу в масив
+  //
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { goal, gender, age, height, weight, activity },
+      { new: true }
+    ).exec();
+
+    if (!user) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+    const { error } = updateSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.message });
+    }
+
+    const bmr = bmrCalc(weight, height, age, gender, activity);
+
+    const waterRate = waterCalc(weight, activity);
+
+    const ratio = ratioCalc(goal, weight, height, age, gender, activity);
+    const userCard = await UserCard.findOne({ owner: user.id });
+    const id = userCard.id;
+
+    const changeUserCard = await UserCard.findByIdAndUpdate(
+      id,
+      { bmr, waterRate, ratio },
+      { new: true }
+    ).exec();
+
+    return res.status(200).json({
+      goal: user.goal,
+      gender: user.gender,
+      age: user.age,
+      height: user.height,
+      weight: user.weight,
+      activity: user.activity,
+      bmr: changeUserCard.bmr,
+      waterRate: changeUserCard.waterRate,
+      ratio: changeUserCard.ratio,
     });
   } catch (error) {
     next(error);
@@ -56,4 +124,4 @@ async function current(req, res, next) {
 //     next(error);
 //   }
 // }
-module.exports = { current };
+module.exports = { current, update };

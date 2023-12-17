@@ -17,6 +17,15 @@ const registrSchema = Joi.object({
   activity: Joi.number().required(),
 });
 
+const updateSchema = Joi.object({
+  goal: Joi.string().required(),
+  gender: Joi.string().required(),
+  age: Joi.number().max(100).min(16),
+  height: Joi.number().max(250).min(130),
+  weight: Joi.number().max(200).min(40),
+  activity: Joi.number(),
+});
+
 const loginSchema = Joi.object({
   email: Joi.string()
     .email({
@@ -27,4 +36,4 @@ const loginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-module.exports = { registrSchema, loginSchema };
+module.exports = { registrSchema, loginSchema, updateSchema };

@@ -131,6 +131,7 @@ async function signin(req, res, next) {
     res.status(200).json({
       token,
       user: {
+        // id: user._id,
         email: user.email,
       },
     });
