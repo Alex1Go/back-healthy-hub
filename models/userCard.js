@@ -30,7 +30,7 @@ const userCardSchema = new mongoose.Schema({
 
   weightStatistics: [
     {
-      date: { type: Number },
+      date: { type: String },
       weight: { type: Number },
     },
   ],

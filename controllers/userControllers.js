@@ -125,6 +125,54 @@ async function goalUpdate(req, res, next) {
     next(error);
   }
 }
+async function weightStatistic(req, res, next) {
+  const { weight } = req.body;
+
+  const { _id: owner } = req.user;
+
+  try {
+    const userCard = await UserCard.findOne({ owner });
+
+    const id = userCard.owner;
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { weight },
+      { new: true }
+    ).exec();
+
+    userCard.bmr = bmrCalc(
+      user.weight,
+      user.height,
+      user.age,
+      user.gender,
+      user.activity
+    );
+    userCard.waterRate = waterCalc(user.weight, user.activity.toString());
+
+    // const date = new Date();
+    // const day = date.getDate();
+    // const month = date.getMonth() + 1;
+    // const year = date.getFullYear();
+    const currentDate = new Date().toJSON().slice(0, 10);
+    const statistic = userCard.weightStatistics;
+    const data = statistic.find((element) => element.date === currentDate);
+
+    if (!data) {
+      userCard.weightStatistics.push({
+        date: currentDate,
+        weight,
+      });
+    }
+    statistic.map((element) =>
+      element.date === currentDate ? (element.weight = weight) : ""
+    );
+    await userCard.save();
+    return res.status(200).json({ success: true, data: userCard });
+  } catch (error) {
+    next(error);
+  }
+}
 
 async function addWater(req, res, next) {
   const { date, woter } = req.body;
@@ -157,4 +205,4 @@ async function addWater(req, res, next) {
 //     next(error);
 //   }
 // }
-module.exports = { current, update, addWater, goalUpdate };
+module.exports = { current, update, addWater, goalUpdate, weightStatistic };

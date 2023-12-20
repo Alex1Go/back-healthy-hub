@@ -13,7 +13,7 @@ function waterCalc(weight, activity) {
   let waterRate = 0;
   const baseWaterRate = Math.round(weight * 0.03 * 1000);
   switch (activity) {
-    case "1.2":
+    case 1.2:
       waterRate = baseWaterRate;
       return waterRate;
 
