@@ -140,7 +140,7 @@ async function signin(req, res, next) {
   }
 }
 
-async function sigout(req, res, next) {
+async function signout(req, res, next) {
   try {
     const user = await User.findByIdAndUpdate(req.user.id, {
       token: null,
@@ -154,4 +154,4 @@ async function sigout(req, res, next) {
   }
 }
 
-module.exports = { signup, signin, sigout };
+module.exports = { signup, signin, signout };

@@ -75,6 +75,165 @@
                     }
                 }
             }
+        },
+        "/api/auth/signin": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User autorization",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Autorization's object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Email or password is wrong",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User registration",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Registration's object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "409": {
+                        "description": "Provided email already exists",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/auth/signout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User signout",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Signout object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "User is logged out",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/user/current": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get information of current user",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "User's object",
+                    "content": {}
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -126,19 +285,19 @@
                         ]
                     },
                     "age": {
-                        "type": "number",
+                        "type": "integer",
                         "description": "User's age"
                     },
                     "height": {
-                        "type": "number",
+                        "type": "integer",
                         "description": "User's height"
                     },
                     "weight": {
-                        "type": "number",
+                        "type": "integer",
                         "description": "User's weight"
                     },
                     "activity": {
-                        "type": "string",
+                        "type": "number",
                         "description": "User's activity",
                         "enum": [
                             "1.2",
@@ -155,20 +314,25 @@
                 "items": {
                     "type": "object",
                     "properties": {
-                        "email": {
-                            "type": "string",
-                            "description": "User's email",
-                            "format": "email"
-                        },
                         "userId": {
                             "type": "number",
                             "description": "User's id",
                             "example": "32143232436545474"
                         },
+                        "email": {
+                            "type": "string",
+                            "description": "User's email",
+                            "format": "email"
+                        },
                         "username": {
                             "type": "string",
                             "description": "User's name",
                             "example": "Boris"
+                        },
+                        "password": {
+                            "type": "string",
+                            "description": "User's password",
+                            "example": "$10$hkdMc.0nmSSixQvXcBYxM.3fWLh"
                         },
                         "goal": {
                             "type": "string",
@@ -203,17 +367,17 @@
                         "createdAt": {
                             "type": "date",
                             "description": "User's create date",
-                            "example": "2020-07-20T18:03:17.199Z"
+                            "example": "2023-12-20T22:19:34.873+00:00"
                         },
                         "updatedAt": {
                             "type": "date",
                             "description": "User's update date",
-                            "example": "2020-07-20T18:03:17.199Z"
+                            "example": "2023-12-20T22:19:34.873+00:00"
                         },
                         "token": {
                             "type": "string",
                             "description": "JWT token",
-                            "example": "dherjdJIUzI1NiIs5XVCJ9.eyJ6IjYUyNWI4ZCIsImlh5NTIyNTc5NywiZXhw4NTk3fQ.0uWHpbQZXcOaDqTo-zTba6fp"
+                            "example": "null"
                         }
                     }
                 },
@@ -223,21 +387,139 @@
                     "email": "test@email.com",
                     "goal": "Lose Fat",
                     "gender": "Male",
-                    "age": "158",
-                    "height": "205",
-                    "weight": "55",
+                    "age": "30",
+                    "height": "180",
+                    "weight": "70",
                     "activity": "1.2",
-                    "createdAt": "2023-12-20T10:10:10.199Z",
-                    "updatedAt": "2023-12-20T10:10:10.406Z",
-                    "token": "dherjdJIUzI1NiIs5XVCJ9.eyJ6IjYUyNWI4ZCIsImlh5NTIyNTc5NywiZXhw4NTk3fQ.0uWHpbQZXcOaDqTo-zTba6fp"
+                    "createdAt": "2023-12-20T22:19:34.873+00:00",
+                    "updatedAt": "2023-12-20T22:19:34.873+00:00",
+                    "token": "null"
                 }
-            }
-        },
-        "securitySchemes": {
-            "Bearer": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
+            },
+            "LoginRequest": {
+                "type": "object",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User's password",
+                        "example": "qwerty123"
+                    }
+                }
+            },
+            "LoginResponse": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "userId": {
+                            "type": "number",
+                            "description": "User's id",
+                            "example": "32143232436545474"
+                        },
+                        "email": {
+                            "type": "string",
+                            "description": "User's email",
+                            "format": "email"
+                        },
+                        "username": {
+                            "type": "string",
+                            "description": "User's name",
+                            "example": "Boris"
+                        },
+                        "password": {
+                            "type": "string",
+                            "description": "User's password",
+                            "example": "$10$hkdMc.0nmSSixQvXcBYxM.3fWLh"
+                        },
+                        "goal": {
+                            "type": "string",
+                            "description": "User's goal",
+                            "example": "Lose Fat"
+                        },
+                        "gender": {
+                            "type": "string",
+                            "description": "User's gender",
+                            "example": "Female"
+                        },
+                        "age": {
+                            "type": "string",
+                            "description": "User's age",
+                            "example": "58"
+                        },
+                        "height": {
+                            "type": "string",
+                            "description": "User's height",
+                            "example": "178"
+                        },
+                        "weight": {
+                            "type": "string",
+                            "description": "User's weight",
+                            "example": "132"
+                        },
+                        "activity": {
+                            "type": "string",
+                            "description": "User's activity",
+                            "example": "1.2"
+                        },
+                        "createdAt": {
+                            "type": "date",
+                            "description": "User's create date",
+                            "example": "2023-12-20T22:19:34.873+00:00"
+                        },
+                        "updatedAt": {
+                            "type": "date",
+                            "description": "User's update date",
+                            "example": "2023-12-20T22:19:34.873+00:00"
+                        },
+                        "token": {
+                            "type": "string",
+                            "description": "JWT token",
+                            "example": "2ff5g2f5f8g5h2n1g5r5t4t85rd5gg84"
+                        }
+                    }
+                },
+                "example": {
+                    "_id": "650b17c591f026bd77525b6d",
+                    "username": "Boris",
+                    "email": "test@email.com",
+                    "goal": "Lose Fat",
+                    "gender": "Male",
+                    "age": "30",
+                    "height": "180",
+                    "weight": "70",
+                    "activity": "1.2",
+                    "createdAt": "2023-12-20T22:19:34.873+00:00",
+                    "updatedAt": "2023-12-20T22:19:34.873+00:00",
+                    "token": "fbdfbfdb45b2derbd5erbe98rb15r18erb8r"
+                }
+            },
+            "Logout": {
+                "type": "object",
+                "required": [
+                    "_id"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "User's id"
+                    }
+                }
+            },
+            "securitySchemes": {
+                "Bearer": {
+                    "type": "http",
+                    "scheme": "bearer",
+                    "bearerFormat": "JWT"
+                }
             }
         }
     }
