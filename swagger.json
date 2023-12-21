@@ -70,7 +70,7 @@
                         "content": {}
                     },
                     "409": {
-                        "description": "Provided email already exists",
+                        "description": "Email in use",
                         "content": {}
                     }
                 }
@@ -94,7 +94,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RegistrationRequest"
+                                "$ref": "#/components/schemas/LoginRequest"
                             }
                         }
                     }
@@ -105,7 +105,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/RegistrationResponse"
+                                    "$ref": "#/components/schemas/LoginResponse"
                                 }
                             }
                         }
@@ -126,7 +126,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "User registration",
+                "summary": "User forgot-password",
                 "parameters": [],
                 "security": [
                     {
@@ -134,33 +134,33 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Registration's object",
+                    "description": "Forgot-password object",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RegistrationRequest"
+                                "$ref": "#/components/schemas/ForgotPasswordRequest"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Successful operation",
+                    "200": {
+                        "description": "New password sent to your email",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/RegistrationResponse"
+                                    "$ref": "#/components/schemas/ForgotPasswordResponse"
                                 }
                             }
                         }
                     },
                     "400": {
-                        "description": "Bad request (invalid request body)",
+                        "description": "Invalid email format",
                         "content": {}
                     },
-                    "409": {
-                        "description": "Provided email already exists",
+                    "422": {
+                        "description": "User doesn't exist!",
                         "content": {}
                     }
                 }
@@ -184,7 +184,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RegistrationRequest"
+                                "$ref": "#/components/schemas/Logout"
                             }
                         }
                     }
@@ -223,10 +223,55 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/RegistrationResponse"
+                                    "$ref": "#/components/schemas/CurrentResponse"
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        " /api/user/update": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user information ",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "User's object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
                     },
                     "401": {
                         "description": "Not authorized",
@@ -315,7 +360,7 @@
                     "type": "object",
                     "properties": {
                         "userId": {
-                            "type": "number",
+                            "type": "string",
                             "description": "User's id",
                             "example": "32143232436545474"
                         },
@@ -421,7 +466,7 @@
                     "type": "object",
                     "properties": {
                         "userId": {
-                            "type": "number",
+                            "type": "string",
                             "description": "User's id",
                             "example": "32143232436545474"
                         },
@@ -451,22 +496,22 @@
                             "example": "Female"
                         },
                         "age": {
-                            "type": "string",
+                            "type": "integer",
                             "description": "User's age",
                             "example": "58"
                         },
                         "height": {
-                            "type": "string",
+                            "type": "integer",
                             "description": "User's height",
                             "example": "178"
                         },
                         "weight": {
-                            "type": "string",
+                            "type": "integer",
                             "description": "User's weight",
                             "example": "132"
                         },
                         "activity": {
-                            "type": "string",
+                            "type": "number",
                             "description": "User's activity",
                             "example": "1.2"
                         },
@@ -502,6 +547,29 @@
                     "token": "fbdfbfdb45b2derbd5erbe98rb15r18erb8r"
                 }
             },
+            "ForgotPasswordRequest": {
+                "type": "object",
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email"
+                    }
+                }
+            },
+            "ForgotPasswordResponse": {
+                "type": "object",
+                "properties": {
+                    "password": {
+                        "type": "string",
+                        "description": "User's password",
+                        "example": "$10$hkdMc.0nmSSixQvXcBYxM.3fWLh"
+                    }
+                }
+            },
             "Logout": {
                 "type": "object",
                 "required": [
@@ -514,12 +582,117 @@
                     }
                 }
             },
-            "securitySchemes": {
-                "Bearer": {
-                    "type": "http",
-                    "scheme": "bearer",
-                    "bearerFormat": "JWT"
+            "CurrentRequest": {
+                "type": "object",
+                "required": [
+                    "_id"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "User's id"
+                    }
                 }
+            },
+            "CurrentResponse": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "description": "User's name",
+                        "example": "Boris Johnson"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email"
+                    },
+                    "goal": {
+                        "type": "string",
+                        "description": "User's goal",
+                        "example": "Lose Fat"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "description": "User's gender",
+                        "example": "Female"
+                    },
+                    "age": {
+                        "type": "integer",
+                        "description": "User's age",
+                        "example": "60"
+                    },
+                    "height": {
+                        "type": "integer",
+                        "description": "User's height",
+                        "example": "170"
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "description": "User's weight",
+                        "example": "80"
+                    },
+                    "activity": {
+                        "type": "number",
+                        "description": "User's activity",
+                        "example": "1.2"
+                    },
+                    "bmr": {
+                        "type": "integer",
+                        "description": "User's bmr",
+                        "example": "560"
+                    },
+                    "waterRate": {
+                        "type": "number",
+                        "description": "User's water rate",
+                        "example": "1.5"
+                    },
+                    "ratio": {
+                        "type": "number",
+                        "description": "User's ratio",
+                        "example": "1.5"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "JWT token",
+                        "example": "eyJhbGcf5th4rtrthrbrrh515845cCI6IkpXVCJ9.eyJpZCI6IjY1MGIxNY5psD6fpACYwS0"
+                    }
+                },
+                "example": {
+                    "_id": "650b17c591f026bd77525b6d",
+                    "name": "Boris Johnson",
+                    "email": "test@email.com",
+                    "goal": "Lose Fat",
+                    "gender": "Male",
+                    "age": "60",
+                    "height": "170",
+                    "weight": "80",
+                    "activity": "1.2",
+                    "bmr": "560",
+                    "waterRate": "1.5",
+                    "ratio": "1.5",
+                    "token": "eyJhbGceyJpZCI6IjY13ZCIsImlhdCI6MTY5k1MzA4NTkfQ.0uWHpb4IXpsD6fpACYwS0"
+                }
+            },
+            "UpdateRequest": {
+                "type": "object",
+                "required": [
+                    "_id"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "User's id"
+                    }
+                }
+            }
+        },
+        "UpdateResponse": {},
+        "securitySchemes": {
+            "Bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         }
     }
