@@ -1,12 +1,15 @@
 const User = require("../models/users");
 const UserCard = require("../models/userCard");
 const bcrypt = require("bcrypt");
+const nanoid = require("nanoid");
 const jwt = require("jsonwebtoken");
 const { bmrCalc, waterCalc, ratioCalc } = require("../helpres/calculation");
 const {
   registrSchema,
   loginSchema,
+  forgotSchema,
 } = require("../validation/userValidationSchema");
+const { sendEmail } = require("../helpres/sendEmail");
 
 async function signup(req, res, next) {
   const {
@@ -154,4 +157,37 @@ async function signout(req, res, next) {
   }
 }
 
-module.exports = { signup, signin, signout };
+async function forgotPassword(req, res, next) {
+  try {
+    const { email } = req.body;
+    console.log(email);
+    const { error } = forgotSchema.validate({ email });
+    if (error) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+    const newPassword = nanoid();
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(422).json({ message: "User doesn't exist!" });
+    }
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashPassword;
+    user.verificationToken = nanoid();
+    user.verify = true;
+    await user.save();
+    const emailContent = {
+      to: email,
+      subject: "New password",
+      html: `<h2>Your new password:</h2> 
+      <p> ${newPassword}</p>`,
+    };
+    await sendEmail(emailContent);
+    res.json({
+      message: "New password sent to your email",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { signup, signin, signout, forgotPassword };

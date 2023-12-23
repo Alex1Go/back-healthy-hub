@@ -35,5 +35,13 @@ const loginSchema = Joi.object({
     .required(),
   password: Joi.string().min(6).required(),
 });
+const forgotSchema = Joi.object({
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ["com", "net", "ua"] },
+    })
+    .required(),
+});
 
-module.exports = { registrSchema, loginSchema, updateSchema };
+module.exports = { registrSchema, loginSchema, updateSchema, forgotSchema };

@@ -2,6 +2,7 @@ const User = require("../models/users");
 const UserCard = require("../models/userCard");
 const { updateSchema } = require("../validation/userValidationSchema");
 const { bmrCalc, waterCalc, ratioCalc } = require("../helpres/calculation");
+const mongoose = require("mongoose");
 
 async function current(req, res, next) {
   try {
@@ -83,7 +84,6 @@ async function update(req, res, next) {
     next(error);
   }
 }
-
 async function goalUpdate(req, res, next) {
   const { goal } = req.body;
   const { _id } = req.user;
@@ -127,7 +127,6 @@ async function goalUpdate(req, res, next) {
 }
 async function weightStatistic(req, res, next) {
   const { weight } = req.body;
-
   const { _id: owner } = req.user;
 
   try {
@@ -173,36 +172,161 @@ async function weightStatistic(req, res, next) {
     next(error);
   }
 }
+// async function addWater(req, res, next) {
+//   const { water, date } = req.body;
+//   const { _id: owner } = req.user;
+
+//   try {
+//     const userCard = await UserCard.findOne({ owner });
+
+//     const existingWater = userCard.waterStatistics.findIndex(
+//       (entry) => entry.date === date
+//     );
+//     console.log(userCard.waterStatistics);
+//     if (existingWater !== -1) {
+//       userCard.waterStatistics[existingWater].water = water;
+//     } else {
+//       userCard.waterStatistics.push({
+//         date,
+//         water,
+//       });
+//     }
+//     await userCard.save();
+//     res.status(200).json({ success: true, date: userCard.waterStatistics });
+//   } catch (error) {
+//     next(error);
+//   }
+// }
 
 async function addWater(req, res, next) {
-  const { date, woter } = req.body;
+  const { water } = req.body;
   const { _id: owner } = req.user;
-
   try {
+    const currentDate = new Date().toJSON().slice(0, 10);
     const userCard = await UserCard.findOne({ owner });
-    const existingEntryIndex = userCard.waterStatistics.findIndex(
-      (entry) => entry.date === date
+    const waterEntry = userCard.waterStatistics.find(
+      (entry) => entry.date === currentDate
     );
-
-    if (existingEntryIndex !== -1) {
-      userCard.waterStatistics[existingEntryIndex].woter = woter;
+    if (waterEntry) {
+      waterEntry.water += water;
     } else {
       userCard.waterStatistics.push({
-        date: date,
-        woter: woter,
+        date: currentDate,
+        water: water,
       });
     }
     await userCard.save();
-    res.status(200).json({ success: true, date: userCard });
+    res.status(200).json({ success: true, date: userCard.waterStatistics });
   } catch (error) {
     next(error);
   }
 }
 
-// async function getAllStatistics(req, res, next) {
+// async function addWater(req, res, next) {
+//   const { water } = req.body;
+//   const { _id: owner } = req.user;
 //   try {
+//     const currentDate = new Date().toLocaleDateString();
+//     const userCard = await UserCard.findOne({ owner });
+//     const waterEntry = userCard.waterStatistics.find(
+//       (entry) => entry.date === currentDate
+//     );
+
+//     if (waterEntry) {
+//       waterEntry.water += water;
+//     } else {
+//       userCard.waterStatistics.push({
+//         date: currentDate,
+//         water: water,
+//       });
+//     }
+//     await userCard.save();
+//     res.status(200).json({ success: true, date: userCard.waterStatistics });
 //   } catch (error) {
 //     next(error);
 //   }
 // }
-module.exports = { current, update, addWater, goalUpdate, weightStatistic };
+
+async function deleteWater(req, res, next) {
+  const { _id: owner } = req.user;
+  try {
+    const currentDate = new Date().toJSON().slice(0, 10);
+    const updatedUserCard = await UserCard.findOneAndUpdate(
+      { owner, "waterStatistics.date": currentDate },
+      { $pull: { waterStatistics: { date: currentDate } } },
+      { new: true }
+    );
+    if (!updatedUserCard) {
+      return res.status(404).json({ message: "Вы ещё не вносили данные" });
+    }
+
+    res.status(200).json({ message: "Данные удалены" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getAllStatistic(req, res, next) {
+  const { _id: owner } = req.user;
+  const { startDate, endDate } = req.query;
+
+  try {
+    const statistics = await UserCard.aggregate([
+      { $match: { owner: mongoose.Types.ObjectId(owner) } },
+      {
+        $project: {
+          weightStatistics: {
+            $filter: {
+              input: "$weightStatistics",
+              as: "weightStat",
+              cond: {
+                $and: [
+                  { $gte: ["$$weightStat.date", startDate] },
+                  { $lte: ["$$weightStat.date", endDate] },
+                ],
+              },
+            },
+          },
+          foodConsumed: {
+            $filter: {
+              input: "$foodConsumed",
+              as: "foodConsumedStat",
+              cond: {
+                $and: [
+                  { $gte: ["$$foodConsumedStat.date", startDate] },
+                  { $lte: ["$$foodConsumedStat.date", endDate] },
+                ],
+              },
+            },
+          },
+          waterStatistics: {
+            $filter: {
+              input: "$waterStatistics",
+              as: "waterStat",
+              cond: {
+                $and: [
+                  { $gte: ["$$waterStat.date", startDate] },
+                  { $lte: ["$$waterStat.date", endDate] },
+                ],
+              },
+            },
+          },
+        },
+      },
+    ]);
+
+    res.json({ success: true, statistics });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = {
+  current,
+  update,
+  addWater,
+  deleteWater,
+  goalUpdate,
+  weightStatistic,
+  getAllStatistic,
+};

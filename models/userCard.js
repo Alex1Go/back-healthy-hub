@@ -38,8 +38,8 @@ const userCardSchema = new mongoose.Schema({
 
   waterStatistics: [
     {
-      date: { type: Number },
-      woter: { type: Number },
+      date: { type: String },
+      water: { type: Number },
     },
   ],
   // масив дата - вжита вода

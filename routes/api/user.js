@@ -3,9 +3,10 @@ const {
   current,
   update,
   addWater,
+  deleteWater,
   goalUpdate,
   weightStatistic,
-  // getAllStatistics,
+  getAllStatistic,
 } = require("../../controllers/userControllers");
 const auth = require("../../middleware/midauth");
 
@@ -19,7 +20,7 @@ router.post("/food-intake");
 router.put("/food-intake/:id");
 router.delete("/food-intake/");
 router.post("/water-intake", auth, addWater);
-router.delete("/water-intake");
-// router.get("/statistics", getAllStatistics);
+router.delete("/water-intake", auth, deleteWater);
+router.get("/statistics", auth, getAllStatistic);
 
 module.exports = router;
