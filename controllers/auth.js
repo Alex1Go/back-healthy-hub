@@ -158,9 +158,8 @@ async function signout(req, res, next) {
 }
 
 async function forgotPassword(req, res, next) {
+  const { email } = req.body;
   try {
-    const { email } = req.body;
-    console.log(email);
     const { error } = forgotSchema.validate({ email });
     if (error) {
       return res.status(400).json({ message: "Invalid email format" });
