@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("./db");
+// require("./db");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");

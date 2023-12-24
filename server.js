@@ -1,8 +1,22 @@
-const app = require("./app");
+// const app = require("./app");
+// require("dotenv").config();
+
+// const PORT = process.env.PORT || 3000;
+
+// app.listen(PORT, () => {
+//   console.log("Server running on http://localhost:" + PORT);
+// });
+
+const mongoose = require("mongoose");
 require("dotenv").config();
+const app = require("./app");
 
-const PORT = process.env.PORT || 3000;
+mongoose.set("strictQuery", true);
 
-app.listen(PORT, () => {
-  console.log("Server running on http://localhost:" + PORT);
-});
+mongoose
+  .connect(process.env.DB_URI)
+  .then(app.listen(process.env.PORT, () => console.log("Server running")))
+  .catch((err) => {
+    console.log(err.message);
+    process.exit();
+  });
