@@ -14,7 +14,7 @@ async function current(req, res, next) {
     const userCard = await UserCard.findOne({ owner: user.id });
 
     return res.status(200).json({
-      username: user.name,
+      username: user.username,
       email: user.email,
       goal: user.goal,
       gender: user.gender,
