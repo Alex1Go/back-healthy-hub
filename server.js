@@ -12,10 +12,10 @@ require("dotenv").config();
 const app = require("./app");
 
 mongoose.set("strictQuery", true);
-
+const PORT = process.env.PORT || 3000;
 mongoose
   .connect(process.env.DB_URI)
-  .then(app.listen(process.env.PORT, () => console.log("Server running")))
+  .then(app.listen(PORT, () => console.log("Server running")))
   .catch((err) => {
     console.log(err.message);
     process.exit();

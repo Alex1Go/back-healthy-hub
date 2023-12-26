@@ -2,7 +2,7 @@
     "openapi": "3.0.1",
     "info": {
         "version": "2.0.2",
-        "title": "Swagger test",
+        "title": "Healthy-Hub",
         "description": "Showing off swagger-ui-express",
         "license": {
             "name": "MIT",
@@ -275,6 +275,451 @@
                     },
                     "401": {
                         "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/user/goal": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user goal",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "User goal",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GoalRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The goal has been updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GoalResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized ",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/user/weight": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user weight",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "User weight",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WeightRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The weight has been updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeightResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized ",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/user/food-intake": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "User food-intake",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "User food-intake",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FoodIntakeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Create foodIntake",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FoodIntakeResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized ",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/user/food-intake/:id": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user food-intake",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update user food-intake",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Create foodIntake",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized ",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "delete": {
+            "tags": [
+                "User"
+            ],
+            "summary": "Delete user food-intake for current day",
+            "parameters": [],
+            "security": [
+                {
+                    "Bearer": []
+                }
+            ],
+            "requestBody": {
+                "description": "Delete user food-intake",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "_id": {
+                                    "type": "string",
+                                    "example": "6584d35c727bdda93e300bf0"
+                                },
+                                "snack": {
+                                    "type": "object",
+                                    "properties": {
+                                        "products": {
+                                            "type": "array",
+                                            "items": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "The food-intake for current day was deleted",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateResponse"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Bad request (invalid request body)",
+                    "content": {}
+                },
+                "401": {
+                    "description": "Not authorized ",
+                    "content": {}
+                }
+            }
+        },
+        "/api/user/water-intake": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user water-intake",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update user water-intake",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "water"
+                                ],
+                                "properties": {
+                                    "water": {
+                                        "type": "integer",
+                                        "example": 200
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Create water-intake",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized ",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "Delete": {
+            "tags": [
+                "User"
+            ],
+            "summary": "Delete user water-intake for current day",
+            "parameters": [],
+            "security": [
+                {
+                    "Bearer": []
+                }
+            ],
+            "requestBody": {
+                "description": "Delete user water-intake",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "_id": {
+                                    "type": "integer",
+                                    "example": "6584d35c727bdda93e300bf0"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "The water-intake for current day was deleted",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateResponse"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Bad request (invalid request body)",
+                    "content": {}
+                },
+                "401": {
+                    "description": "Not authorized ",
+                    "content": {}
+                }
+            }
+        },
+        "/api/user/statistics": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get statistics of the user",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "User statistics ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "startDate",
+                                    "endDate"
+                                ],
+                                "properties": {
+                                    "_id": {
+                                        "type": "integer",
+                                        "example": "6584d35c727bdda93e300bf0"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "example": "2023-12-01"
+                                    },
+                                    "endDate": {
+                                        "type": "string",
+                                        "example": "2023-12-10"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User statistics received",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatisticsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not authorized ",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/recommended-food": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Recommended-food for user",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "User's recommended-food ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "data": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Get all recommended-food",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecommendedFoodResponce"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not authorized ",
                         "content": {}
                     }
                 }
@@ -677,23 +1122,433 @@
             "UpdateRequest": {
                 "type": "object",
                 "required": [
-                    "_id"
+                    "_id",
+                    "username",
+                    "goal",
+                    "gender",
+                    "age",
+                    "height",
+                    "weight",
+                    "activity"
                 ],
                 "properties": {
                     "_id": {
                         "type": "string",
                         "description": "User's id"
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "User's name",
+                        "example": "Bob"
+                    },
+                    "goal": {
+                        "type": "string",
+                        "description": "User's goal",
+                        "enum": [
+                            "Lose Fat",
+                            "Maintain",
+                            "Gain Muscle"
+                        ]
+                    },
+                    "gender": {
+                        "type": "string",
+                        "description": "User's goal",
+                        "enum": [
+                            "Male",
+                            "Female"
+                        ]
+                    },
+                    "age": {
+                        "type": "integer",
+                        "description": "User's age"
+                    },
+                    "height": {
+                        "type": "integer",
+                        "description": "User's height"
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "description": "User's weight"
+                    },
+                    "activity": {
+                        "type": "number",
+                        "description": "User's activity",
+                        "enum": [
+                            "1.2",
+                            "1.375",
+                            "1.55",
+                            "1.725",
+                            "1.9"
+                        ]
                     }
                 }
+            },
+            "UpdateResponse": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "userId": {
+                            "type": "string",
+                            "description": "User's id",
+                            "example": "32143232436545474"
+                        },
+                        "goal": {
+                            "type": "string",
+                            "description": "User's goal",
+                            "example": "Lose Fat"
+                        },
+                        "gender": {
+                            "type": "string",
+                            "description": "User's gender",
+                            "example": "Female"
+                        },
+                        "age": {
+                            "type": "string",
+                            "description": "User's age",
+                            "example": "58"
+                        },
+                        "height": {
+                            "type": "string",
+                            "description": "User's height",
+                            "example": "178"
+                        },
+                        "weight": {
+                            "type": "string",
+                            "description": "User's weight",
+                            "example": "132"
+                        },
+                        "activity": {
+                            "type": "string",
+                            "description": "User's activity",
+                            "example": "1.2"
+                        },
+                        "bmr": {
+                            "type": "integer",
+                            "description": "User's bmr",
+                            "example": "2010"
+                        },
+                        "waterRate": {
+                            "type": "integer",
+                            "description": "User's waterRate",
+                            "example": "1555"
+                        },
+                        "ratio": {
+                            "type": "object",
+                            "properties": {
+                                "carbonohidrates": {
+                                    "type": "integer",
+                                    "description": "User's carbonohidrates",
+                                    "example": "1010"
+                                },
+                                "protein": {
+                                    "type": "integer",
+                                    "description": "User's protein",
+                                    "example": "950"
+                                },
+                                "fat": {
+                                    "type": "integer",
+                                    "description": "User's fat",
+                                    "example": "760"
+                                }
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "_id": "650b17c591f026bd77525b6d",
+                    "goal": "Lose Fat",
+                    "gender": "Male",
+                    "age": "30",
+                    "height": "180",
+                    "weight": "70",
+                    "activity": "1.2",
+                    "bmr": "3520",
+                    "waterRate": "3520",
+                    "ratio": {
+                        "carbonohidrates": "1201",
+                        "protein": "3520",
+                        "fat": "760"
+                    }
+                }
+            },
+            "GoalRequest": {
+                "type": "object",
+                "required": [
+                    "_id",
+                    "goal"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "User's id"
+                    },
+                    "goal": {
+                        "type": "string",
+                        "description": "User's goal",
+                        "enum": [
+                            "Lose Fat",
+                            "Maintain",
+                            "Gain Muscle"
+                        ]
+                    }
+                }
+            },
+            "GoalResponse": {
+                "type": "object",
+                "properties": {
+                    "goal": {
+                        "type": "string",
+                        "description": "User's goal",
+                        "example": "Lose Fat"
+                    }
+                },
+                "example": {
+                    "_id": "650b17c591f026bd77525b6d",
+                    "goal": "Lose Fat"
+                }
+            },
+            "WeightRequest": {
+                "type": "object",
+                "required": [
+                    "_id",
+                    "weight"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "User's id"
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "description": "User's weight"
+                    }
+                }
+            },
+            "WeightResponse": {
+                "type": "object",
+                "properties": {
+                    "weight": {
+                        "type": "integer",
+                        "description": "User's weight",
+                        "example": "132"
+                    }
+                },
+                "example": {
+                    "_id": "650b17c591f026bd77525b6d",
+                    "weight": "132"
+                }
+            },
+            "FoodIntakeRequest": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "Type of food"
+                    },
+                    "product": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Product name  "
+                            },
+                            "carbonohidrates": {
+                                "type": "number",
+                                "description": "Carbonohidrates content"
+                            },
+                            "protein": {
+                                "type": "number",
+                                "description": "Protein content"
+                            },
+                            "fat": {
+                                "type": "number",
+                                "description": "Fat content"
+                            },
+                            "calories": {
+                                "type": "number",
+                                "description": "Calories content"
+                            }
+                        }
+                    },
+                    "totalCalories": {
+                        "type": "number",
+                        "description": "Total calories"
+                    }
+                }
+            },
+            "FoodIntakeResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "description": "The status of the response ."
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "description": "Type of food"
+                            },
+                            "product": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Product name"
+                                    },
+                                    "carbonohidrates": {
+                                        "type": "number",
+                                        "description": "Carbonohidrates content"
+                                    },
+                                    "protein": {
+                                        "type": "number",
+                                        "description": "Protein content"
+                                    },
+                                    "fat": {
+                                        "type": "number",
+                                        "description": "Fat content"
+                                    },
+                                    "calories": {
+                                        "type": "number",
+                                        "description": "Calories content"
+                                    }
+                                }
+                            },
+                            "totalCalories": {
+                                "type": "number",
+                                "description": "Total calories"
+                            }
+                        }
+                    }
+                }
+            },
+            "StatisticsResponse": {
+                "type": "object",
+                "properties": {
+                    "Stats": {
+                        "type": "array",
+                        "description": "User statistic",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "date": {
+                                    "type": "string",
+                                    "example": "2023-12-01"
+                                },
+                                "water": {
+                                    "type": "integer",
+                                    "example": 1650
+                                },
+                                "weight": {
+                                    "type": "integer",
+                                    "example": 50
+                                },
+                                "totalCalories": {
+                                    "type": "integer",
+                                    "example": 1700
+                                }
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "stats": [
+                        {
+                            "date": "2023-12-01",
+                            "water": 1700,
+                            "weight": 50,
+                            "totalCalories": 1500
+                        },
+                        {
+                            "date": "2023-12-02",
+                            "water": 1100,
+                            "weight": 0,
+                            "totalCalories": 1900
+                        },
+                        {
+                            "date": "2023-12-03",
+                            "water": 900,
+                            "weight": 0,
+                            "totalCalories": 1700
+                        }
+                    ]
+                }
+            },
+            "RecommendedFoodResponce": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "description": "All recommended food",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "example": "Apples"
+                        },
+                        "amount": {
+                            "type": "string",
+                            "example": "100 g"
+                        },
+                        "img": {
+                            "type": "string",
+                            "example": "https://ftp.goit.study/img/you_health/Apples.png"
+                        },
+                        "calories": {
+                            "type": "integer",
+                            "example": 52
+                        },
+                        "nutrition": {
+                            "type": "object",
+                            "properties": {
+                                "carbohydrates": {
+                                    "type": "integer",
+                                    "example": 14
+                                },
+                                "protein": {
+                                    "type": "number",
+                                    "example": 0.3
+                                },
+                                "fat": {
+                                    "type": "number",
+                                    "example": 0.2
+                                }
+                            }
+                        }
+                    }
+                },
+                "example": [
+                    {
+                        "name": "Apples",
+                        "amount": "100 g",
+                        "img": "https://ftp.goit.study/img/you_health/Apples.png",
+                        "calories": 52,
+                        "nutrition": {
+                            "carbohydrates": 14,
+                            "protein": 0.3,
+                            "fat": 0.2
+                        }
+                    },
+                    {
+                        "name": "Strawberries",
+                        "amount": "100 g",
+                        "img": "https://ftp.goit.study/img/you_health/Strawberries.png",
+                        "calories": 32,
+                        "nutrition": {
+                            "carbohydrates": 7.68,
+                            "protein": 0.67,
+                            "fat": 0.3
+                        }
+                    }
+                ]
             }
-        },
-        "UpdateResponse": {},
-        "securitySchemes": {
-            "Bearer": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
+        }
+    },
+    "securitySchemes": {
+        "Bearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
         }
     }
 }

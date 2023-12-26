@@ -13,6 +13,6 @@ router.post("/signup", jsonParser, signup);
 router.post("/signin", jsonParser, signin);
 router.post("/signout", auth, signout);
 
-router.post("/forgot-password", auth, forgotPassword);
+router.post("/forgot-password", jsonParser, forgotPassword);
 
 module.exports = router;

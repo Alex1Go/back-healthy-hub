@@ -1,8 +1,8 @@
+const mongoose = require("mongoose");
 const User = require("../models/users");
 const UserCard = require("../models/userCard");
 const { updateSchema } = require("../validation/userValidationSchema");
 const { bmrCalc, waterCalc, ratioCalc } = require("../helpres/calculation");
-const mongoose = require("mongoose");
 
 async function current(req, res, next) {
   try {
@@ -30,7 +30,6 @@ async function current(req, res, next) {
     next(error);
   }
 }
-
 async function update(req, res, next) {
   const { username, goal, gender, age, height, weight, activity } = req.body;
   const { _id } = req.user;
@@ -172,48 +171,101 @@ async function weightStatistic(req, res, next) {
     next(error);
   }
 }
-// async function addWater(req, res, next) {
-//   const { water, date } = req.body;
-//   const { _id: owner } = req.user;
+async function addFood(req, res, next) {
+  const { breakfast, lunch, dinner, snack } = req.body;
+  const { _id: owner } = req.user;
 
-//   try {
-//     const userCard = await UserCard.findOne({ owner });
+  try {
+    const currentDate = new Date().toJSON().slice(0, 10);
+    let userCard = await UserCard.findOne({
+      owner,
+      "foodConsumed.date": currentDate,
+    });
 
-//     const existingWater = userCard.waterStatistics.findIndex(
-//       (entry) => entry.date === date
-//     );
-//     console.log(userCard.waterStatistics);
-//     if (existingWater !== -1) {
-//       userCard.waterStatistics[existingWater].water = water;
-//     } else {
-//       userCard.waterStatistics.push({
-//         date,
-//         water,
-//       });
-//     }
-//     await userCard.save();
-//     res.status(200).json({ success: true, date: userCard.waterStatistics });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+    if (!userCard) {
+      userCard = new UserCard({
+        owner,
+        foodConsumed: [{ date: currentDate }],
+      });
+    }
 
+    userCard.breakfast = { ...userCard.breakfast, ...breakfast };
+    userCard.lunch = { ...userCard.lunch, ...lunch };
+    userCard.dinner = { ...userCard.dinner, ...dinner };
+    userCard.snack = { ...userCard.snack, ...snack };
+
+    userCard.foodConsumed[0].dayCalories =
+      (userCard.breakfast.calories || 0) +
+      (userCard.lunch.calories || 0) +
+      (userCard.dinner.calories || 0) +
+      (userCard.snack.calories || 0);
+
+    userCard.foodConsumed[0].dayCarbonohidrates =
+      (userCard.breakfast.carbonohidrates || 0) +
+      (userCard.lunch.carbonohidrates || 0) +
+      (userCard.dinner.carbonohidrates || 0) +
+      (userCard.snack.carbonohidrates || 0);
+
+    userCard.foodConsumed[0].dayProtein =
+      (userCard.breakfast.protein || 0) +
+      (userCard.lunch.protein || 0) +
+      (userCard.dinner.protein || 0) +
+      (userCard.snack.protein || 0);
+
+    userCard.foodConsumed[0].dayFat =
+      (userCard.breakfast.fat || 0) +
+      (userCard.lunch.fat || 0) +
+      (userCard.dinner.fat || 0) +
+      (userCard.snack.fat || 0);
+
+    userCard.foodConsumed[0].dayWater =
+      (userCard.breakfast.water || 0) +
+      (userCard.lunch.water || 0) +
+      (userCard.dinner.water || 0) +
+      (userCard.snack.water || 0);
+
+    await userCard.save();
+
+    res.json(userCard.foodConsumed[0]);
+  } catch (error) {
+    next(error);
+  }
+}
 async function addWater(req, res, next) {
   const { water } = req.body;
   const { _id: owner } = req.user;
+
   try {
-    const currentDate = new Date().toJSON().slice(0, 10);
-    const userCard = await UserCard.findOne({ owner });
-    const waterEntry = userCard.waterStatistics.find(
-      (entry) => entry.date === currentDate
-    );
-    if (waterEntry) {
-      waterEntry.water += water;
+    const currentDate = new Date().toISOString().split("T")[0];
+    let userCard = await UserCard.findOne({
+      owner,
+      "waterStatistics.date": currentDate,
+    });
+
+    if (userCard) {
+      userCard = await UserCard.findOneAndUpdate(
+        {
+          owner,
+          "waterStatistics.date": currentDate,
+        },
+        {
+          $inc: { "waterStatistics.$.water": water },
+        },
+        { new: true }
+      );
     } else {
-      userCard.waterStatistics.push({
-        date: currentDate,
-        water: water,
-      });
+      userCard = await UserCard.findOneAndUpdate(
+        { owner },
+        {
+          $push: {
+            waterStatistics: {
+              date: currentDate,
+              water,
+            },
+          },
+        },
+        { new: true }
+      );
     }
     await userCard.save();
     res.status(200).json({ success: true, date: userCard.waterStatistics });
@@ -221,32 +273,6 @@ async function addWater(req, res, next) {
     next(error);
   }
 }
-
-// async function addWater(req, res, next) {
-//   const { water } = req.body;
-//   const { _id: owner } = req.user;
-//   try {
-//     const currentDate = new Date().toLocaleDateString();
-//     const userCard = await UserCard.findOne({ owner });
-//     const waterEntry = userCard.waterStatistics.find(
-//       (entry) => entry.date === currentDate
-//     );
-
-//     if (waterEntry) {
-//       waterEntry.water += water;
-//     } else {
-//       userCard.waterStatistics.push({
-//         date: currentDate,
-//         water: water,
-//       });
-//     }
-//     await userCard.save();
-//     res.status(200).json({ success: true, date: userCard.waterStatistics });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
-
 async function deleteWater(req, res, next) {
   const { _id: owner } = req.user;
   try {
@@ -265,7 +291,6 @@ async function deleteWater(req, res, next) {
     next(error);
   }
 }
-
 async function getAllStatistic(req, res, next) {
   const { _id: owner } = req.user;
   const { startDate, endDate } = req.query;
@@ -324,9 +349,10 @@ async function getAllStatistic(req, res, next) {
 module.exports = {
   current,
   update,
-  addWater,
-  deleteWater,
   goalUpdate,
   weightStatistic,
+  addFood,
+  addWater,
+  deleteWater,
   getAllStatistic,
 };

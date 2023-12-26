@@ -7,6 +7,7 @@ const {
   goalUpdate,
   weightStatistic,
   getAllStatistic,
+  addFood,
 } = require("../../controllers/userControllers");
 const auth = require("../../middleware/midauth");
 
@@ -16,7 +17,7 @@ router.get("/current", auth, current);
 router.put("/update", auth, update);
 router.put("/goal", auth, goalUpdate);
 router.post("/weight", auth, weightStatistic);
-router.post("/food-intake");
+router.post("/food-intake", auth, addFood);
 router.put("/food-intake/:id");
 router.delete("/food-intake/");
 router.post("/water-intake", auth, addWater);
