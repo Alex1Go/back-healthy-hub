@@ -17,19 +17,19 @@ function waterCalc(weight, activity) {
       waterRate = baseWaterRate;
       return waterRate;
 
-    case " 1.375":
+    case 1.375:
       waterRate = baseWaterRate + 350;
       return waterRate;
 
-    case "1.55":
+    case 1.55:
       waterRate = baseWaterRate + 350;
       return waterRate;
 
-    case "1.725":
+    case 1.725:
       waterRate = baseWaterRate + 350;
       return waterRate;
 
-    case "1.9":
+    case 1.9:
       waterRate = baseWaterRate + 350;
       return waterRate;
   }
