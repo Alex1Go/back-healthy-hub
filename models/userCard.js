@@ -46,7 +46,7 @@ const userCardSchema = new mongoose.Schema({
 
   foodConsumed: [
     {
-      date: { type: Number },
+      date: { type: String },
       dayCalories: { type: Number },
       dayCarbonohidrates: { type: Number },
       dayProtein: { type: Number },

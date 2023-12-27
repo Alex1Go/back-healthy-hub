@@ -63,6 +63,7 @@ async function update(req, res) {
   ).exec();
 
   return res.status(200).json({
+    username: user.username,
     goal: user.goal,
     gender: user.gender,
     age: user.age,
@@ -161,13 +162,21 @@ async function addFood(req, res) {
   const currentDate = new Date().toJSON().slice(0, 10);
   let userCard = await UserCard.findOne({
     owner,
-    "foodConsumed.date": currentDate,
+    breakfast,
+    lunch,
+    dinner,
+    snack,
+    currentDate,
   });
 
   if (!userCard) {
     userCard = new UserCard({
       owner,
-      foodConsumed: [{ date: currentDate }],
+      breakfast,
+      lunch,
+      dinner,
+      snack,
+      currentDate,
     });
   }
 
