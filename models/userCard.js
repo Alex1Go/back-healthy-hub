@@ -1,6 +1,6 @@
-// const { number, object, array } = require("joi");
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
+const { handleMangooseError } = require("../helpres/handleMangooseError");
 
 const userCardSchema = new mongoose.Schema({
   bmr: { type: Number },
@@ -153,4 +153,5 @@ const userCardSchema = new mongoose.Schema({
     ref: "user",
   },
 });
+userCardSchema.post("save", handleMangooseError);
 module.exports = mongoose.model("UserCard", userCardSchema);

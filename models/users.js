@@ -1,6 +1,6 @@
 // const { string, number } = require("joi");
 const mongoose = require("mongoose");
-
+const { handleMangooseError } = require("../helpres/handleMangooseError");
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+userSchema.post("save", handleMangooseError);
 module.exports = mongoose.model("User", userSchema);
 
 // user{

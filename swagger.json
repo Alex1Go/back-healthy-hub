@@ -28,6 +28,14 @@
         {
             "name": "User",
             "description": "User endpoints"
+        },
+        {
+            "name": "User's food",
+            "description": "User's food endpoints"
+        },
+        {
+            "name": "User's water",
+            "description": "User's water endpoints"
         }
     ],
     "paths": {
@@ -194,7 +202,7 @@
                         "description": "User is logged out",
                         "content": {}
                     },
-                    "401": {
+                    "404": {
                         "description": "Not authorized",
                         "content": {}
                     }
@@ -228,7 +236,7 @@
                             }
                         }
                     },
-                    "401": {
+                    "404": {
                         "description": "Not authorized",
                         "content": {}
                     }
@@ -273,7 +281,7 @@
                         "description": "Bad request (invalid request body)",
                         "content": {}
                     },
-                    "401": {
+                    "404": {
                         "description": "Not authorized",
                         "content": {}
                     }
@@ -318,7 +326,7 @@
                         "description": "Bad request (invalid request body)",
                         "content": {}
                     },
-                    "401": {
+                    "404": {
                         "description": "Not authorized ",
                         "content": {}
                     }
@@ -363,7 +371,7 @@
                         "description": "Bad request (invalid request body)",
                         "content": {}
                     },
-                    "401": {
+                    "404": {
                         "description": "Not authorized ",
                         "content": {}
                     }
@@ -373,7 +381,7 @@
         "/api/user/food-intake": {
             "post": {
                 "tags": [
-                    "User"
+                    "User's food"
                 ],
                 "summary": "User food-intake",
                 "parameters": [],
@@ -408,17 +416,75 @@
                         "description": "Bad request (invalid request body)",
                         "content": {}
                     },
-                    "401": {
+                    "404": {
+                        "description": "Not authorized ",
+                        "content": {}
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User's food"
+                ],
+                "summary": "Delete user food-intake for current day",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Delete user food-intake",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "_id": {
+                                        "type": "string",
+                                        "example": "6584d35c727bdda93e300bf0"
+                                    },
+                                    "snack": {
+                                        "type": "object",
+                                        "properties": {
+                                            "products": {
+                                                "type": "array",
+                                                "items": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The food-intake for current day was deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FoodIntakeResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "404": {
                         "description": "Not authorized ",
                         "content": {}
                     }
                 }
             }
         },
-        "/api/user/food-intake/:id": {
+        "/api/user/food-intake/{id}": {
             "put": {
                 "tags": [
-                    "User"
+                    "User's food"
                 ],
                 "summary": "Update user food-intake",
                 "parameters": [],
@@ -433,7 +499,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/UpdateRequest"
+                                "$ref": "#/components/schemas/FoodIntakeRequest"
                             }
                         }
                     }
@@ -444,7 +510,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UpdateResponse"
+                                    "$ref": "#/components/schemas/FoodIntakeResponse"
                                 }
                             }
                         }
@@ -453,75 +519,17 @@
                         "description": "Bad request (invalid request body)",
                         "content": {}
                     },
-                    "401": {
+                    "404": {
                         "description": "Not authorized ",
                         "content": {}
                     }
                 }
             }
         },
-        "delete": {
-            "tags": [
-                "User"
-            ],
-            "summary": "Delete user food-intake for current day",
-            "parameters": [],
-            "security": [
-                {
-                    "Bearer": []
-                }
-            ],
-            "requestBody": {
-                "description": "Delete user food-intake",
-                "required": true,
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "_id": {
-                                    "type": "string",
-                                    "example": "6584d35c727bdda93e300bf0"
-                                },
-                                "snack": {
-                                    "type": "object",
-                                    "properties": {
-                                        "products": {
-                                            "type": "array",
-                                            "items": {}
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "responses": {
-                "200": {
-                    "description": "The food-intake for current day was deleted",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateResponse"
-                            }
-                        }
-                    }
-                },
-                "400": {
-                    "description": "Bad request (invalid request body)",
-                    "content": {}
-                },
-                "401": {
-                    "description": "Not authorized ",
-                    "content": {}
-                }
-            }
-        },
         "/api/user/water-intake": {
             "post": {
                 "tags": [
-                    "User"
+                    "User's water"
                 ],
                 "summary": "Update user water-intake",
                 "parameters": [],
@@ -556,7 +564,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UpdateResponse"
+                                    "$ref": "#/components/schemas/WaterResponse"
                                 }
                             }
                         }
@@ -565,59 +573,59 @@
                         "description": "Bad request (invalid request body)",
                         "content": {}
                     },
-                    "401": {
+                    "404": {
                         "description": "Not authorized ",
                         "content": {}
                     }
                 }
-            }
-        },
-        "Delete": {
-            "tags": [
-                "User"
-            ],
-            "summary": "Delete user water-intake for current day",
-            "parameters": [],
-            "security": [
-                {
-                    "Bearer": []
-                }
-            ],
-            "requestBody": {
-                "description": "Delete user water-intake",
-                "required": true,
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "_id": {
-                                    "type": "integer",
-                                    "example": "6584d35c727bdda93e300bf0"
+            },
+            "delete": {
+                "tags": [
+                    "User's water"
+                ],
+                "summary": "Delete user water-intake for current day",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Delete user water-intake",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "_id": {
+                                        "type": "integer",
+                                        "example": "6584d35c727bdda93e300bf0"
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            },
-            "responses": {
-                "200": {
-                    "description": "The water-intake for current day was deleted",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateResponse"
+                },
+                "responses": {
+                    "200": {
+                        "description": "The water-intake for current day was deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WaterDeleteResponse"
+                                }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Not authorized ",
+                        "content": {}
                     }
-                },
-                "400": {
-                    "description": "Bad request (invalid request body)",
-                    "content": {}
-                },
-                "401": {
-                    "description": "Not authorized ",
-                    "content": {}
                 }
             }
         },
@@ -674,7 +682,7 @@
                             }
                         }
                     },
-                    "401": {
+                    "404": {
                         "description": "Not authorized ",
                         "content": {}
                     }
@@ -718,7 +726,7 @@
                             }
                         }
                     },
-                    "401": {
+                    "404": {
                         "description": "Not authorized ",
                         "content": {}
                     }
@@ -1422,6 +1430,51 @@
                             }
                         }
                     }
+                }
+            },
+            "WaterResponse": {
+                "type": "object",
+                "description": "Water's data",
+                "properties": {
+                    "properties": {
+                        "date": {
+                            "type": "string",
+                            "description": " water date"
+                        },
+                        "water": {
+                            "type": "integer",
+                            "description": "total volume of water drunk"
+                        }
+                    }
+                },
+                "example": {
+                    "date": "2023-12-04",
+                    "value": 1500
+                }
+            },
+            "WaterDeleteResponse": {
+                "type": "object",
+                "description": "Water's data",
+                "properties": {
+                    "-_id": {
+                        "type": "string",
+                        "description": "user id"
+                    },
+                    "properties": {
+                        "date": {
+                            "type": "string",
+                            "description": "date"
+                        },
+                        "value": {
+                            "type": "integer",
+                            "description": "amout of water for day"
+                        }
+                    }
+                },
+                "example": {
+                    "_id": "16584856svrrer7215c26f1",
+                    "date": "2023-12-22",
+                    "value": 0
                 }
             },
             "StatisticsResponse": {

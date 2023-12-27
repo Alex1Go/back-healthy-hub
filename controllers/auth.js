@@ -1,3 +1,4 @@
+const { CtrlWrapper } = require("../helpres/errorWrapper");
 const User = require("../models/users");
 const UserCard = require("../models/userCard");
 const bcrypt = require("bcrypt");
@@ -11,7 +12,7 @@ const {
 } = require("../validation/userValidationSchema");
 const { sendEmail } = require("../helpres/sendEmail");
 
-async function signup(req, res, next) {
+async function signup(req, res) {
   const {
     username,
     email,
@@ -23,168 +24,161 @@ async function signup(req, res, next) {
     weight,
     activity,
   } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (user) {
-      return res.status(409).json({ message: "Email in use" });
-    }
 
-    const { error } = registrSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.message });
-    }
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const newUser = await User.create({
-      username,
-      email,
-      password: passwordHash,
-      goal,
-      gender,
-      age,
-      height,
-      weight,
-      activity,
-    });
-
-    await UserCard.create({
-      bmr: bmrCalc(weight, height, age, gender, activity),
-
-      waterRate: waterCalc(weight, activity),
-
-      ratio: ratioCalc(goal, weight, height, age, gender, activity),
-
-      weightStatistics: [],
-
-      waterStatistics: [],
-
-      foodConsumed: [],
-
-      breakfast: {
-        name: "",
-        carbonohidrates: 0,
-        protein: 0,
-        fat: 0,
-        calories: 0,
-      },
-
-      lunch: {
-        name: "",
-        carbonohidrates: 0,
-        protein: 0,
-        fat: 0,
-        calories: 0,
-      },
-
-      dinner: {
-        name: "",
-        carbonohidrates: 0,
-        protein: 0,
-        fat: 0,
-        calories: 0,
-      },
-
-      snack: {
-        name: "",
-        carbonohidrates: 0,
-        protein: 0,
-        fat: 0,
-        calories: 0,
-      },
-      owner: newUser._id,
-    });
-
-    res.status(201).json({
-      user: {
-        username: newUser.name,
-        email: newUser.email,
-        goal: newUser.goal,
-        gender: newUser.gender,
-        age: newUser.age,
-        height: newUser.height,
-        weight: newUser.weight,
-        activity: newUser.activity,
-      },
-    });
-  } catch (error) {
-    next(error);
+  const user = await User.findOne({ email });
+  if (user) {
+    return res.status(409).json({ message: "Email in use" });
   }
+
+  const { error } = registrSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.message });
+  }
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  const newUser = await User.create({
+    username,
+    email,
+    password: passwordHash,
+    goal,
+    gender,
+    age,
+    height,
+    weight,
+    activity,
+  });
+
+  await UserCard.create({
+    bmr: bmrCalc(weight, height, age, gender, activity),
+
+    waterRate: waterCalc(weight, activity),
+
+    ratio: ratioCalc(goal, weight, height, age, gender, activity),
+
+    weightStatistics: [],
+
+    waterStatistics: [],
+
+    foodConsumed: [],
+
+    breakfast: {
+      name: "",
+      carbonohidrates: 0,
+      protein: 0,
+      fat: 0,
+      calories: 0,
+    },
+
+    lunch: {
+      name: "",
+      carbonohidrates: 0,
+      protein: 0,
+      fat: 0,
+      calories: 0,
+    },
+
+    dinner: {
+      name: "",
+      carbonohidrates: 0,
+      protein: 0,
+      fat: 0,
+      calories: 0,
+    },
+
+    snack: {
+      name: "",
+      carbonohidrates: 0,
+      protein: 0,
+      fat: 0,
+      calories: 0,
+    },
+    owner: newUser._id,
+  });
+
+  res.status(201).json({
+    user: {
+      username: newUser.name,
+      email: newUser.email,
+      goal: newUser.goal,
+      gender: newUser.gender,
+      age: newUser.age,
+      height: newUser.height,
+      weight: newUser.weight,
+      activity: newUser.activity,
+    },
+  });
 }
 
-async function signin(req, res, next) {
+async function signin(req, res) {
   const { email, password } = req.body;
-  try {
-    const { error } = loginSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.message });
-    }
-    const user = await User.findOne({ email }).exec();
-    if (user === null) {
-      return res.status(401).json({ message: "Email or password is wrong" });
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (isMatch === false) {
-      return res.status(401).json({ message: "Email or password is wrong" });
-    }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "72h",
-    });
-    await User.findByIdAndUpdate(user._id, { token }).exec();
 
-    res.status(200).json({
-      token,
-      user: {
-        // id: user._id,
-        email: user.email,
-      },
-    });
-  } catch (error) {
-    next(error);
+  const { error } = loginSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.message });
   }
+  const user = await User.findOne({ email }).exec();
+  if (user === null) {
+    return res.status(401).json({ message: "Email or password is wrong" });
+  }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (isMatch === false) {
+    return res.status(401).json({ message: "Email or password is wrong" });
+  }
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "72h",
+  });
+  await User.findByIdAndUpdate(user._id, { token }).exec();
+
+  res.status(200).json({
+    token,
+    user: {
+      // id: user._id,
+      email: user.email,
+    },
+  });
 }
 
-async function signout(req, res, next) {
-  try {
-    const user = await User.findByIdAndUpdate(req.user.id, {
-      token: null,
-    }).exec();
-    if (!user) {
-      return res.status(401).json({ message: "Not authorized" });
-    }
-    res.status(204).end();
-  } catch (error) {
-    next(error);
+async function signout(req, res) {
+  const user = await User.findByIdAndUpdate(req.user.id, {
+    token: null,
+  }).exec();
+  if (!user) {
+    return res.status(404).json({ message: "Not authorized" });
   }
+  res.status(204).end();
 }
-async function forgotPassword(req, res, next) {
+
+async function forgotPassword(req, res) {
   const { email } = req.body;
-  try {
-    const { error } = forgotSchema.validate({ email });
-    if (error) {
-      return res.status(400).json({ message: "Invalid email format" });
-    }
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res
-        .status(404)
-        .json({ message: "User not found (email not registered)" });
-    }
 
-    const newPassword = crypto.randomBytes(8).toString("hex");
-    const hashPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashPassword;
-    await user.save();
-    const emailContent = {
-      to: email,
-      subject: "New password",
-      html: `<h2>Your new password:</h2>
-        <p> ${newPassword}</p>`,
-    };
-    await sendEmail(emailContent);
-    return res.status(200).json({ message: "New password sent to your email" });
-  } catch (error) {
-    next(error);
+  const { error } = forgotSchema.validate({ email });
+  if (error) {
+    return res.status(400).json({ message: "Invalid email format" });
   }
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res
+      .status(404)
+      .json({ message: "User not found (email not registered)" });
+  }
+
+  const newPassword = crypto.randomBytes(8).toString("hex");
+  const hashPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashPassword;
+  await user.save();
+  const emailContent = {
+    to: email,
+    subject: "New password",
+    html: `<h2>Your new password:</h2>
+        <p> ${newPassword}</p>`,
+  };
+  await sendEmail(emailContent);
+  return res.status(200).json({ message: "New password sent to your email" });
 }
 
-module.exports = { signup, signin, signout, forgotPassword };
+module.exports = {
+  signup: CtrlWrapper(signup),
+  signin: CtrlWrapper(signin),
+  signout: CtrlWrapper(signout),
+  forgotPassword: CtrlWrapper(forgotPassword),
+};

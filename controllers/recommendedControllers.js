@@ -1,11 +1,8 @@
 const RecommendedFood = require("../models/recommendedFood");
+const { CtrlWrapper } = require("../helpres/errorWrapper");
 
-async function getRecommendedFood(req, res, next) {
-  try {
-    const data = await RecommendedFood.find().exec();
-    res.status(200).json(data);
-  } catch (err) {
-    next(err);
-  }
+async function getRecommendedFood(res) {
+  const data = await RecommendedFood.find().exec();
+  res.status(200).json(data);
 }
-module.exports = { getRecommendedFood };
+module.exports = { getRecommendedFood: CtrlWrapper(getRecommendedFood) };

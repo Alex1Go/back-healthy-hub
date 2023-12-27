@@ -5,16 +5,16 @@ const registrSchema = Joi.object({
   email: Joi.string()
     .email({
       minDomainSegments: 2,
-      tlds: { allow: ["com", "net"] },
+      tlds: { allow: ["com", "net", "ua"] },
     })
     .required(),
   password: Joi.string().min(6).required(),
-  goal: Joi.string().required(),
-  gender: Joi.string().required(),
+  goal: Joi.string().valid("Lose Fat", "Maintain", "Gain Muscle").required(),
+  gender: Joi.string().valid("Male", "Female").required(),
   age: Joi.number().max(100).min(16).required(),
   height: Joi.number().max(250).min(130).required(),
   weight: Joi.number().max(200).min(40).required(),
-  activity: Joi.number().required(),
+  activity: Joi.number().valid(1.2, 1.375, 1.55, 1.725, 1.9).required(),
 });
 
 const updateSchema = Joi.object({
