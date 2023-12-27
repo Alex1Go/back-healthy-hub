@@ -18,6 +18,7 @@ const registrSchema = Joi.object({
 });
 
 const updateSchema = Joi.object({
+  username: Joi.string().alphanum().min(3).max(30).required(),
   goal: Joi.string(),
   gender: Joi.string(),
   age: Joi.number().max(100).min(16),
