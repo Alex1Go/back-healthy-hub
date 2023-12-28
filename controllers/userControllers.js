@@ -158,7 +158,6 @@ async function weightStatistic(req, res) {
 async function addFood(req, res) {
   const { breakfast, lunch, dinner, snack } = req.body;
   const { _id: owner } = req.user;
-
   const currentDate = new Date().toJSON().slice(0, 10);
   let userCard = await UserCard.findOne({
     owner,
@@ -214,9 +213,7 @@ async function addFood(req, res) {
     (userCard.lunch.water || 0) +
     (userCard.dinner.water || 0) +
     (userCard.snack.water || 0);
-
   await userCard.save();
-
   res.json(userCard.foodConsumed[0]);
 }
 async function addWater(req, res) {
@@ -275,7 +272,7 @@ async function getAllStatistic(req, res) {
   const { startDate, endDate } = req.query;
 
   const statistics = await UserCard.aggregate([
-    { $match: { owner: mongoose.Types.ObjectId(owner) } },
+    { $match: { owner: new mongoose.Types.ObjectId(owner) } },
     {
       $project: {
         weightStatistics: {
@@ -284,8 +281,8 @@ async function getAllStatistic(req, res) {
             as: "weightStat",
             cond: {
               $and: [
-                { $gte: ["$$weightStat.date", startDate] },
-                { $lte: ["$$weightStat.date", endDate] },
+                { $gte: ["$$weightStat.date", new Date(startDate)] },
+                { $lte: ["$$weightStat.date", new Date(endDate)] },
               ],
             },
           },
@@ -296,8 +293,8 @@ async function getAllStatistic(req, res) {
             as: "foodConsumedStat",
             cond: {
               $and: [
-                { $gte: ["$$foodConsumedStat.date", startDate] },
-                { $lte: ["$$foodConsumedStat.date", endDate] },
+                { $gte: ["$$foodConsumedStat.date", new Date(startDate)] },
+                { $lte: ["$$foodConsumedStat.date", new Date(endDate)] },
               ],
             },
           },
@@ -308,8 +305,8 @@ async function getAllStatistic(req, res) {
             as: "waterStat",
             cond: {
               $and: [
-                { $gte: ["$$waterStat.date", startDate] },
-                { $lte: ["$$waterStat.date", endDate] },
+                { $gte: ["$$waterStat.date", new Date(startDate)] },
+                { $lte: ["$$waterStat.date", new Date(endDate)] },
               ],
             },
           },
@@ -317,7 +314,6 @@ async function getAllStatistic(req, res) {
       },
     },
   ]);
-
   res.json({ success: true, statistics });
 }
 
