@@ -317,6 +317,20 @@ async function getAllStatistic(req, res) {
   res.json({ success: true, statistics });
 }
 
+async function getWater(req, res) {
+  const { _id: owner } = req.user;
+
+  const currentDate = new Date().toISOString().split("T")[0];
+  const userCard = await UserCard.findOne({
+    owner,
+    "waterStatistics.date": currentDate,
+  });
+  if (!userCard) {
+    return res.status(401).json({ message: "You are not data" });
+  }
+  res.status(200).json(userCard.waterStatistics);
+}
+
 module.exports = {
   current: CtrlWrapper(current),
   update: CtrlWrapper(update),
@@ -326,4 +340,5 @@ module.exports = {
   addWater: CtrlWrapper(addWater),
   deleteWater: CtrlWrapper(deleteWater),
   getAllStatistic: CtrlWrapper(getAllStatistic),
+  getWater: CtrlWrapper(getWater),
 };

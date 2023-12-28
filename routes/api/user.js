@@ -15,4 +15,6 @@ router.post("/water-intake", auth, ctrl.addWater);
 router.delete("/water-intake", auth, ctrl.deleteWater);
 router.get("/statistics", auth, ctrl.getAllStatistic);
 
+router.get("/water", auth, ctrl.getWater);
+
 module.exports = router;
