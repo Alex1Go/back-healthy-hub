@@ -8,7 +8,7 @@ const userCardSchema = new mongoose.Schema({
 
   waterRate: {
     type: Number,
-    required: true,
+    // required: true,
   },
   // денна норма води
 

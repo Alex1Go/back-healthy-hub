@@ -35,7 +35,7 @@ async function signup(req, res) {
     return res.status(400).json({ message: error.message });
   }
   const passwordHash = await bcrypt.hash(password, 10);
-
+  const verificationToken = crypto.randomUUID();
   const newUser = await User.create({
     username,
     email,
@@ -46,6 +46,7 @@ async function signup(req, res) {
     height,
     weight,
     activity,
+    verificationToken,
   });
 
   await UserCard.create({
