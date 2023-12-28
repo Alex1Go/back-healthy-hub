@@ -121,6 +121,8 @@ async function signin(req, res) {
   if (user === null) {
     return res.status(401).json({ message: "Email or password is wrong" });
   }
+  const userCard = await UserCard.findOne();
+
   const isMatch = await bcrypt.compare(password, user.password);
   if (isMatch === false) {
     return res.status(401).json({ message: "Email or password is wrong" });
@@ -133,15 +135,15 @@ async function signin(req, res) {
   res.status(200).json({
     token,
     user: {
-      // id: user._id,
       email: user.email,
-      username: user.name,
+      username: user.username,
       goal: user.goal,
       gender: user.gender,
       age: user.age,
       height: user.height,
       weight: user.weight,
       activity: user.activity,
+      ratio: userCard.ratio,
     },
   });
 }
