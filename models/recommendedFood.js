@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { handleMangooseError } = require("../helpres/handleMangooseError");
+// const { handleMangooseError } = require("../helpres/handleMangooseError");
 
 const recommendedSchema = new mongoose.Schema({
   name: {
@@ -34,5 +34,5 @@ const recommendedSchema = new mongoose.Schema({
   },
 });
 
-recommendedSchema.post("save", handleMangooseError);
+// recommendedSchema.post("save", handleMangooseError);
 module.exports = mongoose.model("RecommendedFood", recommendedSchema);

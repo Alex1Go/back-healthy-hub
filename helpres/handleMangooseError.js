@@ -5,4 +5,4 @@ const handleMangooseError = (error, data, next) => {
   next();
 };
 
-module.exports = { handleMangooseError };
+module.exports = handleMangooseError;

@@ -1,6 +1,6 @@
-// const { string, number } = require("joi");
 const mongoose = require("mongoose");
-const { handleMangooseError } = require("../helpres/handleMangooseError");
+// const { handleMangooseError } = require("../helpres/handleMangooseError");
+
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -54,25 +54,5 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-userSchema.post("save", handleMangooseError);
+// userSchema.post("save", handleMangooseError);
 module.exports = mongoose.model("User", userSchema);
-
-// user{
-//   "_id": {
-//     "$oid": "656b4955a2318a10f45c2156"
-//   },
-//   "username": "null"
-//   "password": "",
-//   "email": "",
-//   "goal": "lost fat",
-//   "gender": "null"
-//   "age": ""
-//   "height": ""
-//   "weight": ""
-//   "activity": ""
-//   "token": "",
-//   "avatarURL": "",
-//   "verify": true,
-//   "verificationToken": null,
-//   "__v": 0
-// }

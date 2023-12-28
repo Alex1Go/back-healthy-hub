@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
-const { handleMangooseError } = require("../helpres/handleMangooseError");
+// const { handleMangooseError } = require("../helpres/handleMangooseError");
 
 const userCardSchema = new mongoose.Schema({
   bmr: { type: Number },
@@ -8,7 +8,7 @@ const userCardSchema = new mongoose.Schema({
 
   waterRate: {
     type: Number,
-    // required: true,
+    required: true,
   },
   // денна норма води
 
@@ -153,5 +153,6 @@ const userCardSchema = new mongoose.Schema({
     ref: "user",
   },
 });
-userCardSchema.post("save", handleMangooseError);
+// userCardSchema.post("save", handleMangooseError);
+
 module.exports = mongoose.model("UserCard", userCardSchema);
