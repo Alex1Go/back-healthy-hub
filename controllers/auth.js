@@ -121,7 +121,7 @@ async function signin(req, res) {
   if (user === null) {
     return res.status(401).json({ message: "Email or password is wrong" });
   }
-  const userCard = await UserCard.findOne();
+  const userCard = await UserCard.findOne({ owner: user.id });
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (isMatch === false) {
