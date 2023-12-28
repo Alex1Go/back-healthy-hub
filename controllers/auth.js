@@ -135,6 +135,13 @@ async function signin(req, res) {
     user: {
       // id: user._id,
       email: user.email,
+      username: user.name,
+      goal: user.goal,
+      gender: user.gender,
+      age: user.age,
+      height: user.height,
+      weight: user.weight,
+      activity: user.activity,
     },
   });
 }
